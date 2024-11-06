@@ -4,9 +4,9 @@ project="mlpcore"
 
 CC=gcc
 CFLAGS="-Wall -Wextra -fanalyzer -g3 -Og"
-LFLAGS="-Wl,-rpath=./build -L./build -l${project}"
+LFLAGS="-Wl,-rpath=./build -L./build -l${project} -lm"
 
-TESTFILES=("test01_feedforward" "test02_randomweights")
+TESTFILES=("test01_feedforward" "test02_randomweights" "test03_backpropagation")
 
 set -x
 

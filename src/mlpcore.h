@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 typedef enum {
+    SIGMOID,
     STEP,
 } activation_t;
 
@@ -25,5 +26,9 @@ int mlp_weights_init(mlp_t *const mlp, const double weights_range[2]);
 void mlp_print_weights(const mlp_t *const mlp);
 int mlp_feedforward(mlp_t *const mlp, const double *const input,
                     double *const output);
+int mlp_backpropagation(mlp_t *const mlp, const double learning_rate,
+                        const double *const input, const size_t n_samples,
+                        const double *const output_expected, 
+                        double *const error_ptr);
 
 #endif
