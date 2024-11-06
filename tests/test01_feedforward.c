@@ -33,7 +33,7 @@ int test_xor(void)
     const size_t shape[] = {2, 2, 1};
     const size_t n_layers = ARRAY_LEN(shape);
 
-    status |= mlp_config(&mlp, shape, n_layers, STEP);
+    status |= mlp_init(&mlp, shape, n_layers, STEP);
 
     mlp.weights[0] = 1.;
     mlp.weights[1] = 1.;
@@ -55,7 +55,7 @@ int test_xor(void)
                (int) x[sample][0], (int) x[sample][1], output, (int) y[sample]);
     }
 
-    mlp_deconf(&mlp);
+    mlp_deinit(&mlp);
     printf("*************************\n");
 
     return status;
@@ -73,7 +73,7 @@ int test_and(void)
     const size_t shape[] = {2, 1};
     const size_t n_layers = ARRAY_LEN(shape);
 
-    status |= mlp_config(&mlp, shape, n_layers, STEP);
+    status |= mlp_init(&mlp, shape, n_layers, STEP);
 
     mlp.weights[0] = 1.;
     mlp.weights[1] = 1.;
@@ -89,7 +89,7 @@ int test_and(void)
                (int) x[sample][0], (int) x[sample][1], output, (int) y[sample]);
     }
 
-    mlp_deconf(&mlp);
+    mlp_deinit(&mlp);
     printf("*************************\n");
 
     return status;
@@ -107,7 +107,7 @@ int test_or(void)
     const size_t shape[] = {2, 1};
     const size_t n_layers = ARRAY_LEN(shape);
 
-    status |= mlp_config(&mlp, shape, n_layers, STEP);
+    status |= mlp_init(&mlp, shape, n_layers, STEP);
 
     mlp.weights[0] = 1.;
     mlp.weights[1] = 1.;
@@ -123,7 +123,7 @@ int test_or(void)
                (int) x[sample][0], (int) x[sample][1], output, (int) y[sample]);
     }
 
-    mlp_deconf(&mlp);
+    mlp_deinit(&mlp);
     printf("*************************\n");
 
     return status;
@@ -144,7 +144,7 @@ int test_and_or(void)
     const size_t shape[] = {2, 2};
     const size_t n_layers = ARRAY_LEN(shape);
 
-    status |= mlp_config(&mlp, shape, n_layers, STEP);
+    status |= mlp_init(&mlp, shape, n_layers, STEP);
 
     mlp.weights[0] = 1.;
     mlp.weights[1] = 1.;
@@ -163,7 +163,7 @@ int test_and_or(void)
                (int) x[sample][0], (int) x[sample][1], output[0], output[1], (int) y[sample][0], (int) y[sample][1]);
     }
 
-    mlp_deconf(&mlp);
+    mlp_deinit(&mlp);
     printf("*************************\n");
 
     return status;
