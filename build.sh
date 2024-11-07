@@ -3,7 +3,7 @@
 project="mlpcore"
 
 CC=gcc
-CFLAGS="-Wall -Wextra -fanalyzer -g3 -Og"
+CFLAGS="-Wall -Wextra -g3 -O0"
 LFLAGS="-Wl,-rpath=./build -L./build -l${project} -lm"
 
 TESTFILES=("test01_feedforward" "test02_randomweights" "test03_backpropagation")

@@ -3,6 +3,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
+
+
+void mlp_seed(void)
+{
+    srand(time(0));
+}
 
 
 int mlp_init(mlp_t *const mlp, const size_t *const layers_shape,
@@ -126,9 +133,6 @@ void mlp_print_weights(const mlp_t *const mlp)
 }
 
 
-
-
-
 static inline double _dot_product(const double *const v1,
                                   const double *const v2, const size_t n) {
     double result = 0.;
@@ -140,8 +144,10 @@ static inline double _dot_product(const double *const v1,
     return result;
 }
 
-static inline double activate(double x, activation_t activation) {
-    double result = 0;
+static double activate(double x, activation_t activation)
+{
+    double result;
+
     switch (activation) {
     case SIGMOID:
         result = 1. / (1. + exp(-x));
@@ -171,22 +177,22 @@ int mlp_feedforward(mlp_t *const mlp, const double *const input,
     }
 
     weights = mlp->weights;
-    for (size_t layer = 0; layer < mlp->n_layers - 1; layer++) {
-        for (size_t neuron = 0; neuron < mlp->layers_shape[layer + 1];
+    for (size_t layer_i = 0; layer_i < mlp->n_layers - 1; layer_i++) {
+        for (size_t neuron = 0; neuron < mlp->layers_shape[layer_i + 1];
              neuron++) {
             double temp_sum, temp_result;
-            temp_sum = _dot_product(x, weights, mlp->layers_shape[layer]) +
+            temp_sum = _dot_product(x, weights, mlp->layers_shape[layer_i]) +
                        mlp->biases[neuron_global];
             mlp->sum[neuron_global] = temp_sum;
 
             temp_result = activate(temp_sum, mlp->activation[neuron_global]);
             mlp->results[neuron_global] = temp_result;
 
-            weights += mlp->layers_shape[layer];
+            weights += mlp->layers_shape[layer_i];
             neuron_global++;
         }
         x = mlp->results + x_displace;
-        x_displace += mlp->layers_shape[layer + 1];
+        x_displace += mlp->layers_shape[layer_i + 1];
     }
 
     size_t n_neurons = mlp->n_neurons;

@@ -49,7 +49,7 @@ int test_xor(void)
     double output;
 
     for (size_t sample = 0; sample < 4; sample++) {
-        mlp_feedforward(&mlp, x[sample], &output);
+        mlp_feedforward(&mlp, &x[sample][0], &output);
 
         printf("a = %d, b = %d, out = %f, expected = %d\n",
                (int) x[sample][0], (int) x[sample][1], output, (int) y[sample]);

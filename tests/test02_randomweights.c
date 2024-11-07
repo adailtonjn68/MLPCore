@@ -1,6 +1,5 @@
 #include "../src/mlpcore.h"
 #include <stdio.h>
-#include <time.h>
 
 
 #define ARRAY_LEN(array) (sizeof(array) / sizeof(array[0]))
@@ -10,8 +9,6 @@ int test_xor(void);
 
 int main(void) {
     int status = 0;
-
-    srand(time(0));
     
     status |= test_xor();
     
@@ -30,6 +27,7 @@ int test_xor(void) {
     const double weights_range[2] = {-1., 1};
   
     status |= mlp_init(&mlp, shape, n_layers, STEP);
+    mlp_seed();
     status |= mlp_weights_init(&mlp, weights_range);
 
     mlp_print_weights(&mlp);
