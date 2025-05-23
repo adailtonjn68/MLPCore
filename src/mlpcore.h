@@ -1,12 +1,17 @@
 #ifndef MLPCORE_H_
 #define MLPCORE_H_
 
+
 #include <stdlib.h>
+
 
 typedef enum {
     SIGMOID,
+    RELU,
+    TANH,
     STEP,
 } activation_t;
+
 
 typedef struct {
     size_t n_inputs, n_outputs, n_layers;
@@ -19,8 +24,9 @@ typedef struct {
     activation_t *activation;
 } mlp_t;
 
+
 int mlp_init(mlp_t *const mlp, const size_t *const layers_shape,
-               const size_t n_layers, const activation_t activation);
+             const size_t n_layers, const activation_t activation);
 void mlp_deinit(mlp_t *const mlp);
 void mlp_seed(void);
 int mlp_weights_init(mlp_t *const mlp, const double weights_range[2]);

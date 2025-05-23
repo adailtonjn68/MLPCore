@@ -13,7 +13,8 @@ void mlp_seed(void)
 
 
 int mlp_init(mlp_t *const mlp, const size_t *const layers_shape,
-               const size_t n_layers, const activation_t activation) {
+             const size_t n_layers, const activation_t activation)
+{
     int status = 0;
     if (mlp == NULL || layers_shape == NULL) {
         fprintf(stderr, "ERROR: null pointers passes\n");
@@ -58,13 +59,17 @@ int mlp_init(mlp_t *const mlp, const size_t *const layers_shape,
     mlp->n_outputs = layers_shape[n_layers - 1];
 
     memcpy(mlp->layers_shape, layers_shape, n_layers * sizeof(*layers_shape));
-    memset(mlp->activation, activation, n_biases * sizeof(*mlp->activation));
+
+    for (size_t i = 0; i < n_biases; i++) {
+        mlp->activation[i] = activation;
+    }
 
 __exit:
     return status;
 }
 
-void mlp_deinit(mlp_t *const mlp) {
+void mlp_deinit(mlp_t *const mlp)
+{
     free(mlp->layers_shape);
     free(mlp->weights);
     free(mlp->biases);
@@ -76,7 +81,8 @@ void mlp_deinit(mlp_t *const mlp) {
 }
 
 int __mlp_weights_init(double *const array, const size_t n,
-                     const double weights_range[static 2]) {
+                     const double weights_range[static 2])
+{
     int status = 0;
     double max_val, min_val;
 
@@ -134,7 +140,8 @@ void mlp_print_weights(const mlp_t *const mlp)
 
 
 static inline double _dot_product(const double *const v1,
-                                  const double *const v2, const size_t n) {
+                                  const double *const v2, const size_t n) 
+{
     double result = 0.;
 
     for (size_t i = 0; i < n; i++) {
@@ -144,13 +151,20 @@ static inline double _dot_product(const double *const v1,
     return result;
 }
 
-static double activate(double x, activation_t activation)
+
+static double activate(const double x, const activation_t activation)
 {
     double result;
 
     switch (activation) {
     case SIGMOID:
         result = 1. / (1. + exp(-x));
+        break;
+    case RELU:
+        result = (x > 0.) ? x : 0.;
+        break;
+    case TANH:
+        result = tanh(x);
         break;
     case STEP:
         result = (x > 0.) ? 1. : 0.;
@@ -163,7 +177,8 @@ static double activate(double x, activation_t activation)
 }
 
 int mlp_feedforward(mlp_t *const mlp, const double *const input,
-                    double *const output) {
+                    double *const output)
+{
     int status = 0;
     const double *x = input;
     double *weights;
@@ -181,6 +196,7 @@ int mlp_feedforward(mlp_t *const mlp, const double *const input,
         for (size_t neuron = 0; neuron < mlp->layers_shape[layer_i + 1];
              neuron++) {
             double temp_sum, temp_result;
+
             temp_sum = _dot_product(x, weights, mlp->layers_shape[layer_i]) +
                        mlp->biases[neuron_global];
             mlp->sum[neuron_global] = temp_sum;
@@ -214,6 +230,13 @@ static double der_activate(const double x, const activation_t activation)
     case SIGMOID:
         aux = 1. / (1. + exp(-x));
         result = aux * (1. - aux);
+        break;
+    case RELU:
+        result = (x > 0.) ? 1. : 0.;
+        break;
+    case TANH:
+        aux = tanh(x);
+        result = 1. - aux * aux;
         break;
     case STEP:
         result = (fabs(x) < 1e-12) ? 1. : 0.;
@@ -392,7 +415,6 @@ int mlp_backpropagation(mlp_t *const mlp, const double learning_rate,
     _mlp_update(mlp, learning_rate, n_samples, der_weights, der_biases);
 
     if (error_ptr != NULL) *error_ptr = error_total;
-
 
 __dealloc:
     free(output);
